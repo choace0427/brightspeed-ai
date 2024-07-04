@@ -1,21 +1,7 @@
 "use client";
 
-import { useState } from "react";
-import { Group, Code, Title, Divider, Stack, Box } from "@mantine/core";
-import {
-  IconBellRinging,
-  IconFingerprint,
-  IconKey,
-  IconSettings,
-  Icon2fa,
-  IconDatabaseImport,
-  IconReceipt2,
-  IconSwitchHorizontal,
-  IconLogout,
-  IconReport,
-  IconEPassport,
-} from "@tabler/icons-react";
-// import { MantineLogo } from "@mantinex/mantine-logo";
+import { Group, Divider, Box, Text } from "@mantine/core";
+import { IconSwitchHorizontal, IconLogout, IconReport, IconEPassport } from "@tabler/icons-react";
 import classes from "../../styles/NavbarSegmented.module.css";
 import { usePathname } from "next/navigation";
 
@@ -47,8 +33,9 @@ export default function SidebarSection() {
     <nav className={classes.navbar}>
       <div className={classes.navbarMain}>
         <Group className={classes.header} justify="space-between" px={"lg"} py={"md"}>
-          {/* <MantineLogo size={28} inverted style={{ color: "white" }} /> */}
-          <Title order={3}>BrightSpeed.ai</Title>
+          <Text fz={24} fw={700} color="white">
+            BrightSpeed.ai
+          </Text>
         </Group>
         <Divider w={"100%"} color="white" />
         <Box p={"md"}>{links}</Box>

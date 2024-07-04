@@ -17,7 +17,7 @@ export default function Home() {
 
   const handleFileDrop = (acceptedFiles) => {
     const pdfFile = URL.createObjectURL(acceptedFiles[0]);
-    setFiles(pdfFile); // Ensure this is a URL or a data buffer
+    setFiles(pdfFile);
   };
 
   const [queries, setQueries] = useState([

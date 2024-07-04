@@ -2,7 +2,7 @@
 
 import { ActionIcon, Flex, ScrollArea, Stack } from "@mantine/core";
 import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import PDF from "react-pdf-js";
 
 export default function PdfViewer({ pdf, key }) {
@@ -36,9 +36,6 @@ export default function PdfViewer({ pdf, key }) {
           <ScrollArea h={700} w={610} offsetScrollbars>
             <PDF key={key} file={pdf} onDocumentComplete={onDocumentComplete} onDocumentError={onDocumentError} page={page} scale={1} />
           </ScrollArea>
-          {/* <ActionIcon color="red" radius={"xl"} className="top-[-12px] right-[-12px]" style={{ position: "absolute" }} onClick={() => setFiles(null)}>
-            <IconX size={"0.9rem"} />
-          </ActionIcon> */}
         </div>
         <Flex justify={"center"} gap={"md"} align={"center"}>
           <ActionIcon onClick={() => onPage(0)} variant="outline" radius={"xl"}>
