@@ -11,8 +11,13 @@ export default function HeaderSection() {
   return (
     <>
       <Flex align={"center"} justify={"end"} px={"md"} pt={"md"}>
-        <ActionIcon color="gray" variant="outline" size={"lg"} onClick={() => setColorScheme(computedColorScheme === "light" ? "dark" : "light")}>
-          {colorScheme === "light" ? <IconMoonStars /> : <IconSun />}
+        <ActionIcon
+          color={colorScheme === "light" ? "gray" : "orange"}
+          variant="outline"
+          size={"lg"}
+          onClick={() => setColorScheme(computedColorScheme === "light" ? "dark" : "light")}
+        >
+          {colorScheme === "light" ? <IconMoonStars color="gray" /> : <IconSun color="orange" />}
         </ActionIcon>
       </Flex>
       <Divider mt={3} color={colorScheme === "light" ? "gray" : "white"} />
