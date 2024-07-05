@@ -2,8 +2,11 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import MainLayout from "./components/layouts/MainLayout";
 import { MantineProvider, createTheme } from "@mantine/core";
-import "@mantine/core/styles.css";
 import { ToastContainer, toast } from "react-toastify";
+
+import "react-photo-view/dist/react-photo-view.css";
+import "@mantine/core/styles.css";
+import "@mantine/dropzone/styles.css";
 import "react-toastify/dist/ReactToastify.css";
 
 const inter = Inter({ subsets: ["latin"] });
