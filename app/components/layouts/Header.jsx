@@ -10,7 +10,7 @@ export default function HeaderSection() {
 
   return (
     <>
-      <Flex align={"center"} justify={"end"} px={"md"} pt={"md"}>
+      <Flex align={"center"} justify={"end"} px={"md"} py={17.5} className="border-b-[1px]">
         <ActionIcon
           color={colorScheme === "light" ? "gray" : "orange"}
           variant="outline"
@@ -20,7 +20,6 @@ export default function HeaderSection() {
           {colorScheme === "light" ? <IconMoonStars color="gray" /> : <IconSun color="orange" />}
         </ActionIcon>
       </Flex>
-      <Divider mt={3} color={colorScheme === "light" ? "gray" : "white"} />
     </>
   );
 }

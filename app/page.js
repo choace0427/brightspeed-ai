@@ -9,7 +9,7 @@ export default function Home() {
 
   useEffect(() => {
     if (pathname === "/") {
-      router.push("/train/pcp");
+      router.push("/train/pcp/single");
     }
   }, []);
   return <div>Coming Soon!</div>;

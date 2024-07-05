@@ -5,7 +5,7 @@ import { IconChevronLeft, IconChevronRight } from "@tabler/icons-react";
 import { useState } from "react";
 import PDF from "react-pdf-js";
 
-export default function PdfViewer({ pdf, key }) {
+export default function PdfViewer({ pdf, key, type }) {
   const [page, setPage] = useState(1);
   const [pages, setPages] = useState(null);
 
@@ -33,7 +33,7 @@ export default function PdfViewer({ pdf, key }) {
     <>
       <Stack h={500}>
         <div className="relative">
-          <ScrollArea h={700} w={610} offsetScrollbars>
+          <ScrollArea h={type === "multi" ? 800 : 700} w={610} offsetScrollbars>
             <PDF key={key} file={pdf} onDocumentComplete={onDocumentComplete} onDocumentError={onDocumentError} page={page} scale={1} />
           </ScrollArea>
         </div>

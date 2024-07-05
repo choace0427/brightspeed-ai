@@ -3,9 +3,9 @@
 import { useState } from "react";
 import { Button, Flex, Group, rem, ScrollArea, Select, Stack, Stepper, Text, TextInput } from "@mantine/core";
 import { IconUpload, IconX, IconReport, IconBrain, IconAnalyze, IconCircleCheck } from "@tabler/icons-react";
-import { Dropzone, PDF_MIME_TYPE } from "@mantine/dropzone";
-import PdfViewer from "../../components/PdfViewer";
+import { Dropzone, PDF_MIME_TYPE, DropzoneProps } from "@mantine/dropzone";
 import { toast } from "react-toastify";
+import PdfViewer from "@/app/components/PdfViewer";
 
 export default function Home() {
   const [active, setActive] = useState(0);
@@ -16,6 +16,7 @@ export default function Home() {
   const [files, setFiles] = useState(null);
 
   const handleFileDrop = (acceptedFiles) => {
+    console.log(acceptedFiles);
     const pdfFile = URL.createObjectURL(acceptedFiles[0]);
     setFiles(pdfFile);
   };
@@ -134,8 +135,23 @@ export default function Home() {
                 </Flex>
               </>
             ) : (
-              <Dropzone onDrop={handleFileDrop} onReject={(files) => console.log("rejected files", files)} maxSize={5 * 1024 ** 2} accept={PDF_MIME_TYPE}>
-                <Group justify="center" gap="xl" mih={220} style={{ pointerEvents: "none" }}>
+              <Dropzone
+                multiple={false}
+                onDrop={handleFileDrop}
+                onReject={(files) => console.log("rejected files", files)}
+                maxSize={5 * 1024 ** 2}
+                accept={PDF_MIME_TYPE}
+                {...DropzoneProps}
+                mt={"lg"}
+                styles={{
+                  inner: {
+                    border: "1px dashed lightgray",
+                    borderRadius: "8px",
+                    padding: "44px",
+                  },
+                }}
+              >
+                <Group justify="center" gap="xl" style={{ pointerEvents: "none" }}>
                   <Dropzone.Accept>
                     <IconUpload style={{ width: rem(52), height: rem(52), color: "var(--mantine-color-blue-6)" }} stroke={1.5} />
                   </Dropzone.Accept>
@@ -147,7 +163,9 @@ export default function Home() {
                   </Dropzone.Idle>
 
                   <div>
-                    <Text size="xl">In this step, you can Upload PDF what you want train</Text>
+                    <Text size="xl">
+                      In this step, you can Upload <span className=" font-bold text-[24px]">1</span> PDF what you want train
+                    </Text>
                     <Text size="sm" c="dimmed" mt={7}>
                       Attach as many files as you like, each file should not exceed 5mb
                     </Text>
