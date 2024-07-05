@@ -177,7 +177,7 @@ export default function Home() {
                 <Button color="green" variant="outline" loading={loading} onClick={handlePDFUpload}>
                   Upload All
                 </Button>
-                <Button color="red" variant="outline" onClick={() => setOriginFiles()}>
+                <Button color="red" variant="outline" disabled={originFiles.length < 2} onClick={() => setOriginFiles()}>
                   Remove all
                 </Button>
               </Flex>
@@ -213,7 +213,9 @@ export default function Home() {
                                 color="red"
                                 variant="transparent"
                                 onClick={() => {
-                                  setOriginFiles(originFiles.filter((_, i) => i !== index));
+                                  if (originFiles.length === 2) {
+                                    toast.warn("Uploaded Files must over 2 files at least!");
+                                  } else setOriginFiles(originFiles.filter((_, i) => i !== index));
                                 }}
                               >
                                 <IconTrash size={"1.2rem"} color="red" />
