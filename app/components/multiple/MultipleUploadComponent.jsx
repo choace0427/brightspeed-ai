@@ -72,7 +72,7 @@ export default function MultipleUploadComponent(props) {
           </Flex>
         </Drawer>
         {originFiles && originFiles.length > 1 ? (
-          <SimpleGrid cols={3}>
+          <SimpleGrid cols={3} w={"100%"}>
             {originFiles.map((item, index) => {
               return (
                 <Paper withBorder p={"sm"} radius={"sm"} shadow="sm" key={index}>
