@@ -1,32 +1,43 @@
-import { ActionIcon, Box, Button, Drawer, Flex, Group, Paper, rem, SimpleGrid, Text } from "@mantine/core";
+import { ActionIcon, Alert, Box, Button, Drawer, Flex, Group, Paper, rem, SimpleGrid, Text } from "@mantine/core";
 import PdfViewer from "../PdfViewer";
-import { IconEye, IconFileText, IconImageInPicture, IconPhoto, IconPhotoAi, IconReport, IconTrash, IconUpload, Iconx } from "@tabler/icons-react";
+import { IconCircleCheck, IconEye, IconFileText, IconPhoto, IconReport, IconTrash, IconUpload, Iconx } from "@tabler/icons-react";
 import { Dropzone, IMAGE_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { formatFileSize } from "@/app/utils/simpleFunctions";
 import { toast } from "react-toastify";
 import { PhotoProvider, PhotoView } from "react-photo-view";
+import { handleUpload } from "@/app/utils/apis";
 
 export default function MultipleUploadComponent(props) {
-  const { setActive, setOriginFiles, originFiles } = props;
+  const { prevStep, setOriginFiles, originFiles, setLoading, loading, setData, nextStep } = props;
 
   const [opened, { open, close }] = useDisclosure(false);
-
-  const [loading, setLoading] = useState(false);
 
   const [files, setFiles] = useState(null);
 
   //image preview
   const [imgFile, setImgFile] = useState([]);
 
-  const handleFileUpload = () => {
+  const handleFileUpload = async () => {
     setLoading(true);
-    setTimeout(() => {
-      toast.success("Upload Successfully");
-      setLoading(false);
-      setActive((current) => (current < 2 ? current + 1 : current));
-    }, 2000);
+    const formData = new FormData();
+    for (let i = 0; i < originFiles.length; i++) {
+      formData.append("files", originFiles[i]);
+    }
+
+    await handleUpload(formData)
+      .then((res) => {
+        const response = res.data;
+        toast.success(response.message);
+        setData(response.allS3Keys);
+        setLoading(false);
+        if (response.allS3Keys && response.allS3Keys.length > 0) nextStep();
+      })
+      .catch((err) => {
+        console.log("---err", err);
+        setLoading(false);
+      });
   };
 
   const handleMultiFilesDrop = (acceptedFiles) => {
@@ -51,9 +62,7 @@ export default function MultipleUploadComponent(props) {
     <>
       {originFiles && originFiles.length > 1 && (
         <Flex justify={"space-between"} align={"center"}>
-          <Text size="lg" fw={600} my={"md"}>
-            You uploaded {originFiles && originFiles.length} files
-          </Text>
+          <Alert variant="light" color="green" title={`You uploaded ${originFiles && originFiles.length} files successfully`} icon={<IconCircleCheck />} />
           <Flex gap={"md"}>
             <Button color="green" variant="outline" loading={loading} onClick={handleFileUpload}>
               Upload All
@@ -72,7 +81,7 @@ export default function MultipleUploadComponent(props) {
           </Flex>
         </Drawer>
         {originFiles && originFiles.length > 1 ? (
-          <SimpleGrid cols={3} w={"100%"}>
+          <SimpleGrid cols={3} w={"100%"} mt={"lg"}>
             {originFiles.map((item, index) => {
               return (
                 <Paper withBorder p={"sm"} radius={"sm"} shadow="sm" key={index}>
@@ -140,7 +149,7 @@ export default function MultipleUploadComponent(props) {
             mt={"lg"}
             multiple={true}
             onDrop={handleMultiFilesDrop}
-            onReject={(files) => console.log("rejected files", files)}
+            onReject={(files) => toast.error(`${files.length} files rejected due to wrong size/type`)}
             maxSize={5 * 1024 ** 2}
             accept={{ IMAGE_MIME_TYPE, PDF_MIME_TYPE }}
             styles={{

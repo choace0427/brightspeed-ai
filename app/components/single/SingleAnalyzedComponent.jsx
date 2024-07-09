@@ -1,28 +1,47 @@
 "use client";
 
-import { Button, Flex, ScrollArea, Text, TextInput } from "@mantine/core";
-import { IconCircleCheck, IconEye } from "@tabler/icons-react";
+import { Alert, Button, Flex, ScrollArea, Text, TextInput } from "@mantine/core";
+import { IconCircleCheck } from "@tabler/icons-react";
+import moment from "moment";
 
 export default function SingleAnalyzedComponent(props) {
   const { data, handleNewTraining } = props;
 
+  console.log(data);
+
   return (
     <>
       <Flex align={"center"} justify={"space-between"}>
-        <Flex align={"center"} gap={"xs"}>
-          <IconCircleCheck color="green" />
-          <Text size="xl" color="green">
-            Training Successfully! &nbsp; Now you can view trained data in this step
-          </Text>
-        </Flex>
+        <Alert variant="light" color="green" title="Analyzed Successfully! &nbsp; Now you can view scanned data in this step" icon={<IconCircleCheck />} />
         <Button variant="outline" onClick={handleNewTraining}>
           New Training
         </Button>
       </Flex>
       <ScrollArea h={680} offsetScrollbars className="h-[calc(100vh - 67px)]" mt={"md"}>
-        {data.map((item, index) => {
-          return <TextInput label={item.label} value={item.value} key={index} mt={"sm"} disabled />;
-        })}
+        {data &&
+          data[0]?.data
+            .sort((a, b) => {
+              let textA = a.QuestionText.toUpperCase();
+              let textB = b.QuestionText.toUpperCase();
+              if (textA < textB) {
+                return 1;
+              }
+              if (textA > textB) {
+                return -1;
+              }
+              return 0;
+            })
+            .map((item, index) => {
+              let formattedValue = item.AnswerText;
+
+              if (item.QueryAlias.toLowerCase().includes("date") || item.QuestionText.toLowerCase().includes("when")) {
+                const possibleFormats = ["DD MMM YYYY", "DD/MM/YYYY", "DD-MM-YYYY", "DD.MM.YYYY"];
+                const momentDate = moment(item.AnswerText, possibleFormats);
+                formattedValue = momentDate.isValid() ? momentDate.format("MM/DD/YYYY") : item.AnswerText;
+              }
+
+              return <TextInput label={item.QuestionText} value={formattedValue} key={index} mt={"sm"} disabled />;
+            })}
       </ScrollArea>
     </>
   );
