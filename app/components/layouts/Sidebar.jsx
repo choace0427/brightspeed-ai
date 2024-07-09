@@ -12,7 +12,7 @@ export default function SidebarSection() {
   return (
     <Paper h={"100%"} bg={colorScheme === "light" ? "#f9fbfa" : ""} radius={0} className=" border-r-[1px] ">
       <Group px={"lg"} py={"md"} className="border-b-[1px]">
-        <Text fz={24} fw={700}>
+        <Text fz={24} fw={700} variant="gradient" gradient={{ from: "blue", to: "teal", deg: 90 }}>
           BrightSpeed.ai
         </Text>
       </Group>
