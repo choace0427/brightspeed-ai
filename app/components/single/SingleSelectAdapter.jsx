@@ -73,7 +73,7 @@ export default function SingleSelectAdapter(props) {
           {selected &&
             selected.queries.map((item) => {
               return (
-                <Badge color="gray" variant="light" tt={"initial"} key={item.Alias}>
+                <Badge color="gray" variant="light" tt={"initial"} key={item.Alias} size="lg">
                   {item.Text}
                 </Badge>
               );

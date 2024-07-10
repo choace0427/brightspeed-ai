@@ -73,7 +73,7 @@ export default function MultipleSelectAdapter(props) {
           {selected &&
             selected.queries.map((item) => {
               return (
-                <Badge color="gray" variant="light" tt={"initial"} key={item.Alias}>
+                <Badge color="gray" variant="light" tt={"initial"} size="lg" key={item.Alias}>
                   {item.Text}
                 </Badge>
               );

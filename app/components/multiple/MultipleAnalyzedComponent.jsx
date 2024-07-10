@@ -6,7 +6,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { IconCircleCheck, IconEye } from "@tabler/icons-react";
 import { DataGrid, stringFilterFn } from "mantine-data-grid";
 import moment from "moment";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 export default function MultipleAnalyzedComponent(props) {
   const { data, handleNewTraining } = props;
@@ -109,11 +109,39 @@ export default function MultipleAnalyzedComponent(props) {
               })
               .map((item, index) => {
                 let formattedValue = item.AnswerText;
+                const possibleFormats = [
+                  "DD MMM YYYY",
+                  "DD/MM/YYYY",
+                  "DD-MM-YYYY",
+                  "DD.MM.YYYY",
+                  "DD MM YY",
+                  "MM YYYY",
+                  "MM/YYYY",
+                  "MM.YYYY",
+                  "MM-YYYY",
+                  "MM/YY",
+                  "MM.YY",
+                  "MM YY",
+                  "MM-YY",
+                  "M/YY",
+                  "M.YY",
+                  "M YY",
+                  "M-YY",
+                ];
+                const momentDate = moment(item.AnswerText, possibleFormats, true);
 
                 if (item.QueryAlias.toLowerCase().includes("date") || item.QuestionText.toLowerCase().includes("when")) {
-                  const possibleFormats = ["DD MMM YYYY", "DD/MM/YYYY", "DD-MM-YYYY", "DD.MM.YYYY"];
-                  const momentDate = moment(item.AnswerText, possibleFormats);
-                  formattedValue = momentDate.isValid() ? momentDate.format("MM/DD/YYYY") : item.AnswerText;
+                  if (momentDate.isValid()) {
+                    if (
+                      ["MM YYYY", "MM/YYYY", "MM.YYYY", "MM-YYYY", "MM/YY", "MM.YY", "MM YY", "MM-YY", "M/YY", "M.YY", "M YY", "M-YY"].includes(
+                        momentDate.creationData().format
+                      )
+                    ) {
+                      formattedValue = momentDate.set("date", 1).format("MM/DD/YYYY");
+                    } else {
+                      formattedValue = momentDate.format("MM/DD/YYYY");
+                    }
+                  }
                 }
 
                 return <TextInput label={item.QuestionText} value={formattedValue} key={index} mt={"sm"} disabled />;
