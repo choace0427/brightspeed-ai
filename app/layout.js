@@ -8,6 +8,8 @@ import "react-photo-view/dist/react-photo-view.css";
 import "@mantine/core/styles.css";
 import "@mantine/dropzone/styles.css";
 import "react-toastify/dist/ReactToastify.css";
+import "react-phone-input-2/lib/bootstrap.css";
+import "@mantine/dates/styles.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
