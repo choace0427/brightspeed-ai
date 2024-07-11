@@ -25,3 +25,33 @@ body {
     text-wrap: balance;
   }
 }
+
+.react-tel-input .form-control {
+  width: 100% !important;
+  padding: 3.5px 35px 6px 62px !important;
+  -webkit-tap-highlight-color: transparent;
+  appearance: none;
+  resize: var(--input-resize, none);
+  display: block;
+  transition: border-color 100ms ease;
+  text-align: var(--input-text-align);
+  color: var(--input-color);
+  border: calc(0.0625rem * var(--mantine-scale)) solid var(--input-bd);
+  background-color: var(--input-bg);
+  font-family: var(--input-font-family, var(--mantine-font-family));
+  height: var(--input-size);
+  min-height: var(--input-height);
+  line-height: var(--input-line-height);
+  font-size: var(--input-fz, var(--input-fz, var(--mantine-font-size-sm)));
+  border-radius: var(--input-radius);
+  padding-inline-start: var(--input-padding-inline-start);
+  padding-inline-end: var(--input-padding-inline-end);
+  padding-top: var(--input-padding-y, 0rem);
+  padding-bottom: var(--input-padding-y, 0rem);
+  cursor: var(--input-cursor);
+  overflow: var(--input-overflow);
+}
+
+#address_global {
+  border: 1px solid var(--mantine-color-gray-4);
+}

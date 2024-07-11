@@ -51,13 +51,14 @@ export default function SidebarSection() {
             />
           </NavLink>
           <NavLink
-            href="#"
             label="Passport Contract"
             leftSection={
               <Avatar variant="light" radius="sm" color="blue" src="" size={28}>
                 <IconEPassport size="1rem" stroke={1.5} color="#228be6" />
               </Avatar>
             }
+            onClick={() => router.push("/train/idcard")}
+            active={pathname.includes("idcard")}
             childrenOffset={28}
             defaultOpened
             color="blue"
