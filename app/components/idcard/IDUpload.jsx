@@ -5,8 +5,6 @@ import { IconCircleCheck, IconReport, IconUpload, IconX } from "@tabler/icons-re
 import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { toast } from "react-toastify";
 import { PhotoProvider, PhotoView } from "react-photo-view";
-import { handleUpload } from "@/app/utils/apis";
-import { useState } from "react";
 import { getImageSize } from "react-image-size";
 
 export default function IDUpload(props) {
@@ -34,8 +32,17 @@ export default function IDUpload(props) {
 
   const handleUpload = () => {
     const requestData = {
-      crmData: crmData,
       id_card: originFiles,
+      birth: crmData.birth,
+      email: crmData.email,
+      first_name: crmData.first_name,
+      last_name: crmData.last_name,
+      lender_name: crmData.lender_name,
+      phone: crmData.phone,
+      country: crmData.country,
+      state: crmData.state,
+      street: crmData.street,
+      zip: crmData.zip,
     };
     setAnalyseData(requestData);
     nextStep();
@@ -71,7 +78,7 @@ export default function IDUpload(props) {
             onDrop={handleFileDrop}
             onReject={(idData) => toast.error(`${idData.length} files rejected due to wrong size/type.`)}
             // maxSize={5 * 1024 ** 2}
-            accept={{ IMAGE_MIME_TYPE }}
+            accept={IMAGE_MIME_TYPE}
             mt={"xl"}
             styles={{
               inner: {

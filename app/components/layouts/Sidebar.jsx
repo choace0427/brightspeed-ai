@@ -51,6 +51,26 @@ export default function SidebarSection() {
             />
           </NavLink>
           <NavLink
+            defaultOpened
+            href="#others"
+            label="Others"
+            leftSection={
+              <Avatar variant="light" radius="sm" color="blue" src="" size={28}>
+                <IconReport size="1rem" stroke={1.5} color="#228be6" />
+              </Avatar>
+            }
+            childrenOffset={28}
+            mt={"md"}
+            styles={{
+              label: {
+                fontWeight: "bolder",
+              },
+            }}
+          >
+            <NavLink label="ID Card Contract" variant="light" active={pathname.includes("idcard")} color="blue" onClick={() => router.push("/train/idcard")} />
+            <NavLink label="CFA Contract" variant="light" active={pathname.includes("cfa")} color="blue" onClick={() => router.push("/train/cfa")} />
+          </NavLink>
+          {/* <NavLink
             label="Passport Contract"
             leftSection={
               <Avatar variant="light" radius="sm" color="blue" src="" size={28}>
@@ -67,7 +87,7 @@ export default function SidebarSection() {
                 fontWeight: "bolder",
               },
             }}
-          />
+          /> */}
         </ScrollArea>
         <Box className="border-t-[1px]">
           <NavLink

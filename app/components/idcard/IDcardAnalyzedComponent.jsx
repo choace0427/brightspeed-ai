@@ -2,12 +2,9 @@
 
 import { Alert, Button, Flex, ScrollArea, Text, TextInput } from "@mantine/core";
 import { IconCircleCheck } from "@tabler/icons-react";
-import moment from "moment";
 
 export default function IDcardAnalyzedComponent(props) {
   const { data, handleNewTraining } = props;
-
-  console.log(data);
 
   return (
     <>
