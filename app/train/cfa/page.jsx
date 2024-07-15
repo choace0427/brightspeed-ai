@@ -2,10 +2,10 @@
 
 import { useState } from "react";
 import { Box, LoadingOverlay, Stack, Stepper } from "@mantine/core";
-import { IconUpload, IconRosetteDiscountCheck, IconEPassport } from "@tabler/icons-react";
-import CRMRefernece from "@/app/components/idcard/CRMReference";
-import IDUpload from "@/app/components/idcard/IDUpload";
-import IDcardAnalyzedComponent from "@/app/components/idcard/IDcardAnalyzedComponent";
+import { IconUpload, IconBrain, IconRosetteDiscountCheck } from "@tabler/icons-react";
+import SingleAnalyzedComponent from "@/app/components/single/SingleAnalyzedComponent";
+import SingleUploadComponent from "@/app/components/single/SingleUploadComponent";
+import SingleSelectAdapter from "@/app/components/single/SingleSelectAdapter";
 
 export default function Home() {
   const [active, setActive] = useState(0);
@@ -30,30 +30,36 @@ export default function Home() {
     setAnalyseData();
   };
 
-  const [crmData, setCRMData] = useState();
-  const [idData, setIdData] = useState();
-
   return (
     <Stack p={"lg"} className="h-[calc(100vh-90px)]">
       <Box pos="relative" h={"100%"}>
         <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} loaderProps={{ color: "pink", type: "bars" }} />
         <Stepper active={active} w={"100%"} onStepClick={setActive}>
-          <Stepper.Step label="CRM Reference Info" icon={<IconUpload size={"1.2rem"} />}>
-            <CRMRefernece setCRMData={setCRMData} nextStep={nextStep} />
-          </Stepper.Step>
-          <Stepper.Step label="Id Card Upload" icon={<IconEPassport size={"1.2rem"} />}>
-            <IDUpload
-              crmData={crmData}
+          <Stepper.Step label="FCA(PDF) Upload" icon={<IconUpload size={"1.2rem"} />}>
+            <SingleUploadComponent
               nextStep={nextStep}
-              setIdData={setIdData}
-              idData={idData}
+              files={files}
+              setFiles={setFiles}
+              setLoading={setLoading}
+              loading={loading}
               setOriginFiles={setOriginFiles}
               originFiles={originFiles}
+              setData={setData}
+            />
+          </Stepper.Step>
+          <Stepper.Step label="Select Adapter" icon={<IconBrain size={"1.2rem"} />}>
+            <SingleSelectAdapter
+              prevStep={prevStep}
+              nextStep={nextStep}
+              data={data}
+              setLoading={setLoading}
               setAnalyseData={setAnalyseData}
+              setSelected={setSelected}
+              selected={selected}
             />
           </Stepper.Step>
           <Stepper.Step label="Show Result" icon={<IconRosetteDiscountCheck size={"1.2rem"} />}>
-            {analyseData && <IDcardAnalyzedComponent data={analyseData} handleNewTraining={handleNewTraining} />}
+            {analyseData && <SingleAnalyzedComponent data={analyseData} handleNewTraining={handleNewTraining} />}
           </Stepper.Step>
           {/* <Stepper.Completed>{analyseData && <SingleAnalyzedComponent data={analyseData} handleNewTraining={handleNewTraining} />}</Stepper.Completed> */}
         </Stepper>
@@ -61,3 +67,6 @@ export default function Home() {
     </Stack>
   );
 }
+
+//  description="You can Upload PDF or Image what you want scanning"
+// description="You can select Adapter to scan the PDF or Image"
