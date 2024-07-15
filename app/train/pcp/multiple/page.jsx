@@ -17,6 +17,10 @@ export default function Home() {
   const [originFiles, setOriginFiles] = useState();
   const [data, setData] = useState();
 
+  //add upload files
+  const [addMoreFiles, setAddMoreFiles] = useState(null);
+  const [add, setAdd] = useState(false);
+
   const [analyseData, setAnalyseData] = useState();
   const [selected, setSelected] = useState();
 
@@ -42,6 +46,10 @@ export default function Home() {
               setLoading={setLoading}
               loading={loading}
               setData={setData}
+              setAddMoreFiles={setAddMoreFiles}
+              addMoreFiles={addMoreFiles}
+              add={add}
+              setAdd={setAdd}
             />
           </Stepper.Step>
           <Stepper.Step label="Select Adapter" icon={<IconBrain size={"1.2rem"} />}>
