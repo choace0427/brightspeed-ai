@@ -1,8 +1,24 @@
-import { ActionIcon, Alert, Box, Button, Drawer, Flex, Group, Paper, rem, SimpleGrid, Text } from "@mantine/core";
+import { ActionIcon, Alert, Box, Button, Divider, Drawer, FileInput, Flex, Group, Paper, rem, SimpleGrid, Text } from "@mantine/core";
 import PdfViewer from "../PdfViewer";
-import { IconCircleCheck, IconEye, IconFileText, IconPhoto, IconReport, IconTrash, IconUpload, Iconx } from "@tabler/icons-react";
+import {
+  IconCircleCheck,
+  IconEye,
+  IconFileText,
+  IconFileTypeJpg,
+  IconFileTypePdf,
+  IconFileTypePng,
+  IconJpg,
+  IconPdf,
+  IconPhoto,
+  IconPlus,
+  IconPng,
+  IconReport,
+  IconTrash,
+  IconUpload,
+  Iconx,
+} from "@tabler/icons-react";
 import { Dropzone, IMAGE_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { formatFileSize } from "@/app/utils/simpleFunctions";
 import { toast } from "react-toastify";
@@ -10,8 +26,8 @@ import { PhotoProvider, PhotoView } from "react-photo-view";
 import { handleUpload } from "@/app/utils/apis";
 
 export default function MultipleUploadComponent(props) {
-  const { prevStep, setOriginFiles, originFiles, setLoading, loading, setData, nextStep } = props;
-
+  const { prevStep, setOriginFiles, originFiles, setLoading, loading, setData, nextStep, addMoreFiles, setAddMoreFiles, add, setAdd } = props;
+  const fileInputRef = useRef(null);
   const [opened, { open, close }] = useDisclosure(false);
 
   const [files, setFiles] = useState(null);
@@ -22,8 +38,10 @@ export default function MultipleUploadComponent(props) {
   const handleFileUpload = async () => {
     setLoading(true);
     const formData = new FormData();
-    for (let i = 0; i < originFiles.length; i++) {
-      formData.append("files", originFiles[i]);
+    let newArray = originFiles.concat(addMoreFiles);
+
+    for (let i = 0; i < newArray.length; i++) {
+      formData.append("files", newArray[i]);
     }
 
     await handleUpload(formData)
@@ -47,6 +65,15 @@ export default function MultipleUploadComponent(props) {
     setOriginFiles(acceptedFiles);
   };
 
+  const handleAddMoreFilesUpload = (acceptedFiles) => {
+    setAdd(true);
+    if (acceptedFiles.length < 2) {
+      toast.warn("Please upload 2 files at least");
+    }
+    // setOriginFiles(acceptedFiles);
+    setAddMoreFiles(acceptedFiles);
+  };
+
   const handlePreviewPDF = (id) => {
     const pdfFile = URL.createObjectURL(originFiles[id]);
     setFiles(pdfFile);
@@ -62,12 +89,45 @@ export default function MultipleUploadComponent(props) {
     <>
       {originFiles && originFiles.length > 1 && (
         <Flex justify={"space-between"} align={"center"}>
-          <Alert variant="light" color="green" title={`You uploaded ${originFiles && originFiles.length} files successfully`} icon={<IconCircleCheck />} />
+          <Alert
+            variant="light"
+            color="green"
+            title={`You uploaded ${originFiles && addMoreFiles && originFiles.length + addMoreFiles.length} files successfully`}
+            icon={<IconCircleCheck />}
+          />
           <Flex gap={"md"}>
+            <Button
+              color="gray"
+              variant="outline"
+              loading={loading}
+              onClick={() => fileInputRef.current.click()}
+              disabled={add && addMoreFiles && addMoreFiles.length > 0}
+            >
+              Add More
+            </Button>
+            <div className="hidden">
+              <FileInput
+                accept="image/*, application/pdf, application/docx"
+                label="Upload files"
+                placeholder="Upload files"
+                multiple
+                clearable
+                ref={fileInputRef}
+                onChange={handleAddMoreFilesUpload}
+              />
+            </div>
             <Button color="green" variant="outline" loading={loading} onClick={handleFileUpload}>
               Upload All
             </Button>
-            <Button color="red" variant="outline" disabled={originFiles.length < 2} onClick={() => setOriginFiles()}>
+            <Button
+              color="red"
+              variant="outline"
+              disabled={originFiles.length < 2}
+              onClick={() => {
+                setOriginFiles();
+                setAddMoreFiles();
+              }}
+            >
               Remove all
             </Button>
           </Flex>
@@ -81,68 +141,165 @@ export default function MultipleUploadComponent(props) {
           </Flex>
         </Drawer>
         {originFiles && originFiles.length > 1 ? (
-          <SimpleGrid cols={3} w={"100%"} mt={"lg"}>
-            {originFiles.map((item, index) => {
-              return (
-                <Paper withBorder p={"sm"} radius={"sm"} shadow="sm" key={index}>
-                  <Flex align={"center"} h={"100%"}>
-                    <Box>
-                      {item.type === "application/pdf" ? (
-                        <IconFileText color="gray" size={"7rem"} stroke={"1.3"} />
-                      ) : item.type?.split("/")[0] === "image" ? (
-                        <IconPhoto color="gray" size={"7rem"} stroke={"1.3"} />
-                      ) : (
-                        <></>
-                      )}
-                    </Box>
-                    <Flex h={"100%"} direction={"column"} justify={"space-evenly"} w={"100%"}>
-                      <Text fw={600} size="md" lineClamp={1}>
-                        {item.name.split(".")[0]}
-                      </Text>
-                      <Text size="sm">
-                        Type: <span className=" uppercase">{item.type.split("/")[1]}</span>
-                      </Text>
-                      <Flex align={"center"} justify={"space-between"}>
-                        <Text size="sm">size: {formatFileSize(item.size)}</Text>
-                        <Flex>
-                          <ActionIcon
-                            onClick={() => {
-                              if (item.type === "application/pdf") handlePreviewPDF(index);
-                              else if (item.type.split("/")[0] === "image") handlePreviewImage(index);
-                            }}
-                            variant="transparent"
-                          >
-                            {item.type.split("/")[0] === "image" ? (
-                              <PhotoProvider>
-                                <div className="foo">
-                                  <PhotoView src={imgFile}>
-                                    <IconEye size={"1.2rem"} color="#228be6" />
-                                  </PhotoView>
-                                </div>
-                              </PhotoProvider>
-                            ) : (
-                              <IconEye size={"1.2rem"} color="#228be6" />
-                            )}
-                          </ActionIcon>
-                          <ActionIcon
-                            color="red"
-                            variant="transparent"
-                            onClick={() => {
-                              if (originFiles.length === 2) {
-                                toast.warn("Uploaded Files must over 2 files at least!");
-                              } else setOriginFiles(originFiles.filter((_, i) => i !== index));
-                            }}
-                          >
-                            <IconTrash size={"1.2rem"} color="red" />
-                          </ActionIcon>
+          <Box w={"100%"}>
+            <SimpleGrid cols={3} w={"100%"} mt={"lg"}>
+              {originFiles
+                .sort((a, b) => {
+                  const nameA = a.type.split("/")[1].toUpperCase();
+                  const nameB = b.type.split("/")[1].toUpperCase();
+                  if (nameA < nameB) {
+                    return -1;
+                  }
+                  if (nameA > nameB) {
+                    return 1;
+                  }
+
+                  return 0;
+                })
+                .map((item, index) => {
+                  return (
+                    <Paper withBorder p={"sm"} radius={"sm"} shadow="sm" key={index}>
+                      <Flex align={"center"} h={"100%"}>
+                        <Box>
+                          {item.type === "application/pdf" ? (
+                            <IconFileTypePdf color="#40c057" size={"7rem"} stroke={"1.3"} />
+                          ) : item.type?.split("/")[1] === "png" ? (
+                            <IconFileTypePng color="#228be6" size={"7rem"} stroke={"1.3"} />
+                          ) : item.type?.split("/")[1] === "jpeg" ? (
+                            <IconFileTypeJpg color="orange" size={"7rem"} stroke={"1.3"} />
+                          ) : (
+                            <></>
+                          )}
+                        </Box>
+                        <Flex h={"100%"} direction={"column"} justify={"space-evenly"} w={"100%"}>
+                          <Text fw={600} size="md" lineClamp={1}>
+                            {item.name.split(".")[0]}
+                          </Text>
+                          <Text size="sm">
+                            Type: <span className=" uppercase">{item.type.split("/")[1]}</span>
+                          </Text>
+                          <Flex align={"center"} justify={"space-between"}>
+                            <Text size="sm">size: {formatFileSize(item.size)}</Text>
+                            <Flex>
+                              <ActionIcon
+                                onClick={() => {
+                                  if (item.type === "application/pdf") handlePreviewPDF(index);
+                                  else if (item.type.split("/")[0] === "image") handlePreviewImage(index);
+                                }}
+                                variant="transparent"
+                              >
+                                {item.type.split("/")[0] === "image" ? (
+                                  <PhotoProvider>
+                                    <div className="foo">
+                                      <PhotoView src={imgFile}>
+                                        <IconEye size={"1.2rem"} color="#228be6" />
+                                      </PhotoView>
+                                    </div>
+                                  </PhotoProvider>
+                                ) : (
+                                  <IconEye size={"1.2rem"} color="#228be6" />
+                                )}
+                              </ActionIcon>
+                              <ActionIcon
+                                color="red"
+                                variant="transparent"
+                                onClick={() => {
+                                  if (originFiles.length === 2) {
+                                    toast.warn("Uploaded Files must over 2 files at least!");
+                                  } else setOriginFiles(originFiles.filter((_, i) => i !== index));
+                                }}
+                              >
+                                <IconTrash size={"1.2rem"} color="red" />
+                              </ActionIcon>
+                            </Flex>
+                          </Flex>
                         </Flex>
                       </Flex>
-                    </Flex>
-                  </Flex>
-                </Paper>
-              );
-            })}
-          </SimpleGrid>
+                    </Paper>
+                  );
+                })}
+            </SimpleGrid>
+            {addMoreFiles && addMoreFiles.length > 0 && (
+              <>
+                <Divider label="Added Files" mt={"xl"} labelPosition="left" color="#228be6" variant="dashed" left={<IconPlus size={"0.9rem"} />} />
+                <SimpleGrid cols={3} w={"100%"} mt={"lg"}>
+                  {addMoreFiles
+                    .sort((a, b) => {
+                      const nameA = a.type.split("/")[1].toUpperCase();
+                      const nameB = b.type.split("/")[1].toUpperCase();
+                      if (nameA < nameB) {
+                        return -1;
+                      }
+                      if (nameA > nameB) {
+                        return 1;
+                      }
+
+                      return 0;
+                    })
+                    .map((item, index) => {
+                      return (
+                        <Paper withBorder p={"sm"} radius={"sm"} shadow="sm" key={index}>
+                          <Flex align={"center"} h={"100%"}>
+                            <Box>
+                              {item.type === "application/pdf" ? (
+                                <IconFileTypePdf color="#40c057" size={"7rem"} stroke={"1.3"} />
+                              ) : item.type?.split("/")[1] === "png" ? (
+                                <IconFileTypePng color="#228be6" size={"7rem"} stroke={"1.3"} />
+                              ) : item.type?.split("/")[1] === "jpeg" ? (
+                                <IconFileTypeJpg color="orange" size={"7rem"} stroke={"1.3"} />
+                              ) : (
+                                <></>
+                              )}
+                            </Box>
+                            <Flex h={"100%"} direction={"column"} justify={"space-evenly"} w={"100%"}>
+                              <Text fw={600} size="md" lineClamp={1}>
+                                {item.name.split(".")[0]}
+                              </Text>
+                              <Text size="sm">
+                                Type: <span className=" uppercase">{item.type.split("/")[1]}</span>
+                              </Text>
+                              <Flex align={"center"} justify={"space-between"}>
+                                <Text size="sm">size: {formatFileSize(item.size)}</Text>
+                                <Flex>
+                                  <ActionIcon
+                                    onClick={() => {
+                                      if (item.type === "application/pdf") handlePreviewPDF(index);
+                                      else if (item.type.split("/")[0] === "image") handlePreviewImage(index);
+                                    }}
+                                    variant="transparent"
+                                  >
+                                    {item.type.split("/")[0] === "image" ? (
+                                      <PhotoProvider>
+                                        <div className="foo">
+                                          <PhotoView src={imgFile}>
+                                            <IconEye size={"1.2rem"} color="#228be6" />
+                                          </PhotoView>
+                                        </div>
+                                      </PhotoProvider>
+                                    ) : (
+                                      <IconEye size={"1.2rem"} color="#228be6" />
+                                    )}
+                                  </ActionIcon>
+                                  <ActionIcon
+                                    color="red"
+                                    variant="transparent"
+                                    onClick={() => {
+                                      setAddMoreFiles(addMoreFiles.filter((_, i) => i !== index));
+                                    }}
+                                  >
+                                    <IconTrash size={"1.2rem"} color="red" />
+                                  </ActionIcon>
+                                </Flex>
+                              </Flex>
+                            </Flex>
+                          </Flex>
+                        </Paper>
+                      );
+                    })}
+                </SimpleGrid>
+              </>
+            )}
+          </Box>
         ) : (
           <Dropzone
             mx={"auto"}
