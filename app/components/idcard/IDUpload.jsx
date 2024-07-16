@@ -6,9 +6,10 @@ import { Dropzone, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { toast } from "react-toastify";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import { getImageSize } from "react-image-size";
+import { handleIdCardUpload } from "@/app/utils/apis";
 
 export default function IDUpload(props) {
-  const { crmData, nextStep, idData, setIdData, setOriginFiles, originFiles, setAnalyseData } = props;
+  const { crmData, nextStep, idData, setIdData, setOriginFiles, originFiles, setAnalyseData, setData, setLoading, loading } = props;
 
   const fetchImageSize = async (file) => {
     try {
@@ -30,22 +31,39 @@ export default function IDUpload(props) {
     fetchImageSize(idFile);
   };
 
-  const handleUpload = () => {
-    const requestData = {
-      id_card: originFiles,
-      birth: crmData.birth,
-      email: crmData.email,
-      first_name: crmData.first_name,
-      last_name: crmData.last_name,
-      lender_name: crmData.lender_name,
-      phone: crmData.phone,
-      country: crmData.country,
-      state: crmData.state,
-      street: crmData.street,
-      zip: crmData.zip,
-    };
-    setAnalyseData(requestData);
-    nextStep();
+  const handleUpload = async () => {
+    setLoading(true);
+    const formData = new FormData();
+
+    formData.append("id_card", originFiles[0]);
+    formData.append("birthday", crmData.birth);
+    formData.append("email", crmData.email);
+    formData.append("first_name", crmData.first_name);
+    formData.append("last_name", crmData.last_name);
+    formData.append("lender_name", crmData.lender_name);
+    formData.append("phone", crmData.phone);
+    formData.append("country", crmData.country);
+    formData.append("state", crmData.state);
+    formData.append("address", crmData.street);
+    formData.append("zip", crmData.zip);
+
+    setAnalyseData(formData);
+
+    await handleIdCardUpload(formData)
+      .then((res) => {
+        const response = res.data;
+        if (response.status === "failure") {
+          toast.warn("Some Data does not mathced with your ID Card");
+        } else {
+          toast.success("ID card scanning Success!");
+        }
+        setData(response);
+        setLoading(false);
+        nextStep();
+      })
+      .catch((err) => {
+        setLoading(false);
+      });
   };
 
   return (
