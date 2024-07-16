@@ -1,5 +1,6 @@
 "use client";
 
+import { parseDate } from "@/app/utils/simpleFunctions";
 import { Alert, Button, Card, Divider, Flex, NumberInput, Paper, ScrollArea, Stack, Text, TextInput, Tooltip } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { IconCircleCheck, IconCircleX, IconInfoCircle } from "@tabler/icons-react";
@@ -22,13 +23,13 @@ export default function IDcardAnalyzedComponent(props) {
         </Button>
       </Flex>
       <Flex gap={"lg"} mt={"md"}>
-        <Paper withBorder shadow="md" radius={"md"} p={"md"} w={"100%"}>
+        <Paper withBorder shadow="md" radius={"md"} py={"md"} pl={"md"} pr={4} w={"100%"}>
           <Text size="lg" fw={700}>
             Analyzed Data
           </Text>
-          <Divider mt={"sm"} />
-          <ScrollArea h={570} mah={570} offsetScrollbars className="h-[calc(100vh - 250px)]" mt={"md"}>
-            <Stack gap={"sm"}>
+          <Divider mt={"sm"} mr={12} />
+          <ScrollArea h={570} mah={570} offsetScrollbars className="h-[calc(100vh - 250px)]" mt={"md"} scrollbarSize={8}>
+            <Stack gap={"sm"} mr={"xs"}>
               <TextInput label="Surname" value={data.extractedData.Surname} disabled />
               <TextInput label="MiddleName" value={data.extractedData.MiddleName} disabled />
               <TextInput label="GivenName" value={data.extractedData.GivenName} disabled />
@@ -40,13 +41,13 @@ export default function IDcardAnalyzedComponent(props) {
             </Stack>
           </ScrollArea>
         </Paper>
-        <Paper withBorder shadow="md" radius={"md"} p={"md"} w={"100%"} h={"fit-content"}>
+        <Paper withBorder shadow="md" radius={"md"} py={"md"} pl={"md"} pr={4} w={"100%"} h={"fit-content"}>
           <Text size="lg" fw={700}>
             Missmatched Data
           </Text>
-          <Divider mt={"sm"} />
-          <ScrollArea mah={500} offsetScrollbars className="h-[calc(100vh - 250px)]" mt={"md"}>
-            <Stack gap={"sm"}>
+          <Divider mt={"sm"} mr={12} />
+          <ScrollArea mah={500} offsetScrollbars className="h-[calc(100vh - 250px)]" mt={"md"} scrollbarSize={8}>
+            <Stack gap={"sm"} mr={"xs"}>
               {data.mismatches.map((item, index) => {
                 return (
                   <Flex w={"100%"} justify={"space-between"} align={"center"}>

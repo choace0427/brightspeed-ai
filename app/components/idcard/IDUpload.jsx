@@ -36,7 +36,7 @@ export default function IDUpload(props) {
     const formData = new FormData();
 
     formData.append("id_card", originFiles[0]);
-    formData.append("birthday", crmData.birth);
+    formData.append("birth", crmData.birth);
     formData.append("email", crmData.email);
     formData.append("first_name", crmData.first_name);
     formData.append("last_name", crmData.last_name);
