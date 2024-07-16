@@ -19,3 +19,11 @@ export const handleAnalyze = async (data) => {
 
   return response;
 };
+
+export const handleIdCardUpload = async (data) => {
+  const response = await axios.post("https://3furpyspkp.eu-west-2.awsapprunner.com/api/id_card", data, {
+    headers: {},
+  });
+
+  return response;
+};

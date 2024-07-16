@@ -28,6 +28,7 @@ export default function Home() {
     setData();
     setSelected();
     setAnalyseData();
+    setIdData();
   };
 
   const [crmData, setCRMData] = useState();
@@ -50,10 +51,13 @@ export default function Home() {
               setOriginFiles={setOriginFiles}
               originFiles={originFiles}
               setAnalyseData={setAnalyseData}
+              setData={setData}
+              setLoading={setLoading}
+              loading={loading}
             />
           </Stepper.Step>
           <Stepper.Step label="Show Result" icon={<IconRosetteDiscountCheck size={"1.2rem"} />}>
-            {analyseData && <IDcardAnalyzedComponent data={analyseData} handleNewTraining={handleNewTraining} />}
+            {data && <IDcardAnalyzedComponent data={data} handleNewTraining={handleNewTraining} />}
           </Stepper.Step>
           {/* <Stepper.Completed>{analyseData && <SingleAnalyzedComponent data={analyseData} handleNewTraining={handleNewTraining} />}</Stepper.Completed> */}
         </Stepper>

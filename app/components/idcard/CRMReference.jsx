@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Button, Flex, Group, Select, TextInput, useMantineColorScheme } from "@mantine/core";
+import { Box, Button, Divider, Flex, Group, Select, TextInput, useMantineColorScheme } from "@mantine/core";
 import { DateInput } from "@mantine/dates";
 import { isNotEmpty, useForm } from "@mantine/form";
 import { IconSend } from "@tabler/icons-react";
@@ -88,10 +88,24 @@ export default function CRMRefernece(props) {
 
   return (
     <form onSubmit={form.onSubmit((values) => handleCRMReferenceSubmit(values))}>
+      <Divider
+        label="Address Information"
+        mt={"md"}
+        mb={"sm"}
+        labelPosition="left"
+        color="blue"
+        variant="dashed"
+        styles={{
+          label: {
+            color: "#228be6",
+          },
+        }}
+      />
       <Flex gap={"md"}>
         <Select
           w={"35%"}
           withAsterisk
+          placeholder="Select Country"
           label="Country"
           value={country ? country.value : null}
           data={countriesList.map((item) => ({
@@ -106,12 +120,20 @@ export default function CRMRefernece(props) {
           key={form.key("country")}
           searchable
         />
-        <TextInput w={"65%"} label="Street address" withAsterisk key={form.key("street")} {...form.getInputProps("street")} />
+        <TextInput
+          w={"65%"}
+          label="Street address"
+          placeholder="Input Street address"
+          withAsterisk
+          key={form.key("street")}
+          {...form.getInputProps("street")}
+        />
       </Flex>
       <Flex gap={"md"} mt={"sm"}>
         <Select
           w={"100%"}
           label="State"
+          placeholder="Select State"
           withAsterisk
           data={
             stateList &&
@@ -124,7 +146,6 @@ export default function CRMRefernece(props) {
             form.setFieldValue("state", option.label);
             setStateid(Number(value));
             GetCity(countryid, Number(value)).then((res) => {
-              console.log("---", res);
               setCityList(res);
             });
           }}
@@ -134,6 +155,7 @@ export default function CRMRefernece(props) {
           <Select
             w={"100%"}
             label="City"
+            placeholder="Select City"
             data={
               cityList &&
               cityList.map((item) => ({
@@ -148,14 +170,27 @@ export default function CRMRefernece(props) {
           />
         )}
 
-        <TextInput w={"100%"} label="ZIP/Postal Code" key={form.key("zip")} {...form.getInputProps("zip")} withAsterisk />
+        <TextInput w={"100%"} placeholder="Input ZIP/Postal code" label="ZIP/Postal Code" key={form.key("zip")} {...form.getInputProps("zip")} withAsterisk />
       </Flex>
+      <Divider
+        label="Personal Information"
+        mt={"xl"}
+        variant="dashed"
+        color="green"
+        mb={"sm"}
+        labelPosition="left"
+        styles={{
+          label: {
+            color: "#40c057",
+          },
+        }}
+      />
       <TextInput withAsterisk label="Email" placeholder="Email" key={form.key("email")} {...form.getInputProps("email")} mt={"sm"} />
       <Flex gap={"md"} mt={"sm"}>
         <TextInput withAsterisk label="First Name" w={"100%"} placeholder="First Name" key={form.key("first_name")} {...form.getInputProps("first_name")} />
-        <TextInput withAsterisk label="Last Name" w={"100%"} placeholder="xxx" key={form.key("last_name")} {...form.getInputProps("last_name")} />
+        <TextInput withAsterisk label="Last Name" w={"100%"} placeholder="Last Name" key={form.key("last_name")} {...form.getInputProps("last_name")} />
       </Flex>
-      <TextInput withAsterisk mt={"sm"} label="Lender Name" placeholder="BrightAI" key={form.key("lender_name")} {...form.getInputProps("lender_name")} />
+      <TextInput withAsterisk mt={"sm"} label="Lender Name" placeholder="Lender Name" key={form.key("lender_name")} {...form.getInputProps("lender_name")} />
       <Flex gap={"md"} mt={"sm"}>
         <Box w={"100%"}>
           <label htmlFor="react-tel-input" className="m_8fdc1311 mantine-InputWrapper-label mantine-TextInput-label">
