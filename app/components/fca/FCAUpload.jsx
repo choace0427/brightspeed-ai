@@ -1,15 +1,19 @@
 "use client";
 
-import { Alert, Box, Button, Flex, Group, Image, Text, rem } from "@mantine/core";
+import { Alert, Badge, Box, Button, Flex, Group, Image, Text, rem } from "@mantine/core";
 import PdfViewer from "../PdfViewer";
-import { IconCircleCheck, IconReport, IconUpload, IconX } from "@tabler/icons-react";
+import { IconCircleCheck, IconReport, IconTrash, IconUpload, IconX } from "@tabler/icons-react";
 import { Dropzone, IMAGE_MIME_TYPE, PDF_MIME_TYPE } from "@mantine/dropzone";
 import { toast } from "react-toastify";
 import { PhotoProvider, PhotoView } from "react-photo-view";
 import { handleUpload } from "@/app/utils/apis";
+import { useState } from "react";
 
-export default function FCAUpload(props) {
-  const { setData, setFiles, files, setLoading, loading, setOriginFiles, originFiles, nextStep } = props;
+export default function CFAUpload(props) {
+  const { setData, setFiles, files, setLoading, loading, setOriginFiles, originFiles, nextStep, setPageSelect, pageSelect } = props;
+
+  const [page, setPage] = useState(1);
+  const [pages, setPages] = useState(null);
 
   const handleFileDrop = (acceptedFiles) => {
     setOriginFiles(acceptedFiles);
@@ -65,7 +69,47 @@ export default function FCAUpload(props) {
                 </div>
               </PhotoProvider>
             ) : (
-              <PdfViewer key={`pdf-viewer-${Date.now()}`} pdf={files} visible={true} setFiles={setFiles} type={"single"} />
+              <Flex gap={"lg"} w={"100%"} justify={"center"}>
+                <PdfViewer
+                  key={`pdf-viewer-${Date.now()}`}
+                  pdf={files}
+                  visible={true}
+                  setFiles={setFiles}
+                  type={"cfa"}
+                  pageSelect={pageSelect}
+                  setPageSelect={setPageSelect}
+                />
+                {pageSelect.length > 0 && (
+                  <Box maw={400}>
+                    <Button variant="outline" color="red" leftSection={<IconTrash size={"1rem"} />} onClick={() => setPageSelect([])}>
+                      Remove All Pages
+                    </Button>
+                    <div className="flex gap-2 flex-wrap mt-5">
+                      {pageSelect.map((item, index) => {
+                        return (
+                          <Badge
+                            size="lg"
+                            key={index}
+                            rightSection={
+                              <IconX
+                                size={"1rem"}
+                                className="hover:cursor-pointer"
+                                onClick={() => {
+                                  let pages = [...pageSelect];
+                                  pages.splice(index, 1);
+                                  setPageSelect(pages);
+                                }}
+                              />
+                            }
+                          >
+                            Page: {item}
+                          </Badge>
+                        );
+                      })}
+                    </div>
+                  </Box>
+                )}
+              </Flex>
             )}
           </>
         ) : (
