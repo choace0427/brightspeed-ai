@@ -10,6 +10,8 @@ import "@mantine/dropzone/styles.css";
 import "react-toastify/dist/ReactToastify.css";
 import "react-phone-input-2/lib/bootstrap.css";
 import "@mantine/dates/styles.css";
+import "@mantine/notifications/styles.css";
+import { Notifications } from "@mantine/notifications";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -43,6 +45,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <body className={inter.className}>
         <MantineProvider theme={theme} withGlobalStyles withNormalizeCSS>
+          <Notifications />
           <MainLayout children={children} />
           <ToastContainer />
         </MantineProvider>

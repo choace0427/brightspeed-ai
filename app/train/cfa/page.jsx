@@ -6,6 +6,7 @@ import { IconUpload, IconBrain, IconRosetteDiscountCheck } from "@tabler/icons-r
 import SingleAnalyzedComponent from "@/app/components/single/SingleAnalyzedComponent";
 import SingleUploadComponent from "@/app/components/single/SingleUploadComponent";
 import SingleSelectAdapter from "@/app/components/single/SingleSelectAdapter";
+import CFAUpload from "@/app/components/fca/FCAUpload";
 
 export default function Home() {
   const [active, setActive] = useState(0);
@@ -20,6 +21,8 @@ export default function Home() {
 
   const [analyseData, setAnalyseData] = useState();
   const [selected, setSelected] = useState();
+
+  const [pageSelect, setPageSelect] = useState([]);
 
   const handleNewTraining = () => {
     setActive(0);
@@ -36,7 +39,7 @@ export default function Home() {
         <LoadingOverlay visible={loading} zIndex={1000} overlayProps={{ radius: "sm", blur: 2 }} loaderProps={{ color: "pink", type: "bars" }} />
         <Stepper active={active} w={"100%"} onStepClick={setActive}>
           <Stepper.Step label="FCA(PDF) Upload" icon={<IconUpload size={"1.2rem"} />}>
-            <SingleUploadComponent
+            <CFAUpload
               nextStep={nextStep}
               files={files}
               setFiles={setFiles}
@@ -45,6 +48,8 @@ export default function Home() {
               setOriginFiles={setOriginFiles}
               originFiles={originFiles}
               setData={setData}
+              pageSelect={pageSelect}
+              setPageSelect={setPageSelect}
             />
           </Stepper.Step>
           <Stepper.Step label="Select Adapter" icon={<IconBrain size={"1.2rem"} />}>
